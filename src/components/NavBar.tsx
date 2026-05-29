@@ -26,6 +26,7 @@ export default function NavBar() {
 }
 
 const Container = styled.div`
+  width: 100%;
   display: flex;
   height: 77px;
   align-items: center;

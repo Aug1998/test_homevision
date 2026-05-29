@@ -27,6 +27,10 @@ export const GlobalStyle = css`
   }
   #root {
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
   }
   a {
     text-decoration: none;
@@ -41,7 +45,20 @@ export const Title = styled.h1`
   font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 `
 
-export const StyledButton = styled.button`
-  padding: 8px 12px;
-  font-size: 14px;
+export const Box = styled.div`
+  color: ${theme.colors.black};
+  font-family: Inter,sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  box-sizing: border-box;
+  flex-flow: column;
+  display: flex;
+  grid-column-gap: 0.5rem;
+  grid-row-gap: 0.5rem;
+  border: 1px solid ${theme.colors.grey};
+  background-color: ${theme.colors.white};
+  border-radius: 1rem;
+  padding: 2rem;
 `
