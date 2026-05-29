@@ -34,6 +34,8 @@ const Container = styled.div`
   background-color: ${theme.colors.white};
   border-bottom: 1px solid ${theme.colors.grey};
   position: sticky;
+  top: 0;
+  z-index: 100;
 `
 
 const Content = styled.div`
