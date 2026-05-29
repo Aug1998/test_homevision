@@ -31,6 +31,7 @@ export const GlobalStyle = css`
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
+  overflow-y: scroll;
   }
   a {
     text-decoration: none;
