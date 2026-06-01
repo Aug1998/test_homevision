@@ -2,17 +2,18 @@ import styled from "@emotion/styled"
 import NavBar from "./components/NavBar"
 import Filters from "./components/Filters"
 import ScrollingArea from "./components/ScrollingArea"
+import { FavoritesProvider } from './FavoritesContext'
 
 function App() {
 
   return (
-    <>
+    <FavoritesProvider>
       <NavBar />
       <Main>
         <Filters />
         <ScrollingArea />
       </Main>
-    </>
+    </FavoritesProvider>
   )
 }
 

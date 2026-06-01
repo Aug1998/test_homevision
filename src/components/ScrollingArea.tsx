@@ -6,8 +6,10 @@ import { useInView } from 'react-intersection-observer'
 import { useEffect } from 'react'
 import LoadingIcon from './LoadingIcon'
 import theme from '../theme'
+import useFavorites from '../useFavorites'
 
 export default function ScrollingArea() {
+  const { isFavoriteHouseId } = useFavorites();
 
   const { data, fetchNextPage, isFetchingNextPage } = useInfiniteQuery({
     queryKey: ['houses'],
@@ -29,11 +31,17 @@ export default function ScrollingArea() {
     }
   }, [inView, fetchNextPage])
 
+
   return (
     <Container>
       {houses?.map((house) => {
         return (
-          <Card id={`house-card-${house.id}`} key={`house-card-${house.id}`} house={house} />
+          <Card
+            id={`house-card-${house.id}`}
+            key={`house-card-${house.id}`}
+            house={house}
+            isFavorite={isFavoriteHouseId(house.id)}
+          />
         )
       })}
       <Sentinel ref={ref}></Sentinel>

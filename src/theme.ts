@@ -9,6 +9,7 @@ const theme = {
     grey: "#e4e4e7",
     black: "#000",
     slate: "#334155",
+    red: "#FF6565",
   },
   fonts: {
     main: 'Arial, sans-serif',
