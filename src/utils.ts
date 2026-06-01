@@ -1,4 +1,9 @@
-export const US_STATES = [
+export type StateOption = {
+  value: string
+  label: string
+}
+
+export const US_STATES: StateOption[] = [
   { value: 'AL', label: 'Alabama' },
   { value: 'AK', label: 'Alaska' },
   { value: 'AZ', label: 'Arizona' },
@@ -50,5 +55,3 @@ export const US_STATES = [
   { value: 'WI', label: 'Wisconsin' },
   { value: 'WY', label: 'Wyoming' },
 ]
-
-export type StateOption = (typeof US_STATES)[number]
