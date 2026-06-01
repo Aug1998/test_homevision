@@ -8,7 +8,7 @@ type Props = React.HTMLAttributes<HTMLDivElement> & {
 
 export default function Card({ house }: Props) {
   return (
-    <Container key={house?.id}>
+    <Container id={`house-card-${house?.id}`} key={house?.id}>
       <img src={house?.photoURL} alt={house?.address} />
       <div>
         <p>$ {house?.price?.toLocaleString()}</p>

@@ -5,3 +5,7 @@ export type House = {
   price: number
   photoURL: string
 }
+
+export type ApiResponse = {
+  houses: House[]
+}
