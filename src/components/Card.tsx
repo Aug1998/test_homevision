@@ -1,6 +1,9 @@
 import styled from '@emotion/styled'
 import type { House } from '../api'
 import { Box } from '../styles'
+import { IoLocationSharp, IoPersonSharp } from "react-icons/io5";
+import { FaDollarSign } from "react-icons/fa";
+import theme from '../theme';
 
 type Props = React.HTMLAttributes<HTMLDivElement> & {
   house?: House
@@ -11,9 +14,9 @@ export default function Card({ house }: Props) {
     <Container id={`house-card-${house?.id}`} key={house?.id}>
       <img src={house?.photoURL} alt={house?.address} />
       <div>
-        <p>$ {house?.price?.toLocaleString()}</p>
-        <h3>{house?.address}</h3>
-        <p>{house?.homeowner}</p>
+        <p className='price'><FaDollarSign /> {house?.price?.toLocaleString()}</p>
+        <h3 className='address'><IoLocationSharp />{house?.address}</h3>
+        <p className='homeowner'><IoPersonSharp />{house?.homeowner}</p>
       </div>
     </Container>
   )
@@ -45,5 +48,28 @@ const Container = styled(Box)`
     flex-direction: column;
     justify-content: center;
     gap: 0.25rem;
+
+    
+    .price {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: ${theme.colors.primary};
+      svg {
+        color: ${theme.colors.primary};
+        transform: scale(1.2) translateY(-1px);
+      }
+    }
+    
+    .address, .homeowner {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.4rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: ${theme.colors.textBlack};
+      svg {
+        transform: scale(1.1) translateY(2px);
+      }
+    }
   }
 `

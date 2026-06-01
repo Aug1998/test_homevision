@@ -36,7 +36,7 @@ export default function ScrollingArea() {
           <Card id={`house-card-${house.id}`} key={`house-card-${house.id}`} house={house} />
         )
       })}
-      <div ref={ref}></div>
+      <Sentinel ref={ref}></Sentinel>
       <LoadingBar isVisible={isFetchingNextPage}>
         {isFetchingNextPage ? <LoadingIcon /> : ''}
       </LoadingBar>
@@ -69,4 +69,9 @@ const LoadingBar = styled.div<{ isVisible: boolean }>`
   pointer-events: none;
   backdrop-filter: blur(12px);
   mask-image: linear-gradient(to top, black 0%, black 20%, transparent 100%);
+`
+
+const Sentinel = styled.div`
+  width: 100%;
+  height: 1px;
 `
