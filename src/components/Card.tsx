@@ -5,7 +5,7 @@ import { IoLocationSharp, IoPersonSharp } from "react-icons/io5";
 import { FaDollarSign } from "react-icons/fa";
 import { MdOutlineFavorite, MdOutlineFavoriteBorder } from "react-icons/md";
 import theme from '../theme';
-import useFavorites from '../useFavorites';
+import { useFavoritesContext } from '../FavoritesContext'
 
 type Props = React.HTMLAttributes<HTMLDivElement> & {
   house?: House
@@ -13,7 +13,7 @@ type Props = React.HTMLAttributes<HTMLDivElement> & {
 }
 
 export default function Card({ house, isFavorite }: Props) {
-  const { toggleFavoriteHouseId } = useFavorites();
+  const { toggleFavoriteHouseId } = useFavoritesContext();
 
   return (
     <Container id={`house-card-${house?.id}`} key={house?.id}>
@@ -98,6 +98,8 @@ const FavoriteButton = styled.button<{ isFavorite?: boolean }>`
   align-items: center;
   cursor: pointer;
   
+  padding: 2px 0 0 1px;
+
   svg {
     color: ${props => props.isFavorite ? theme.colors.red : theme.colors.grey};
     font-size: 1.5rem;

@@ -61,5 +61,5 @@ export const Box = styled.div`
   border: 1px solid ${theme.colors.grey};
   background-color: ${theme.colors.white};
   border-radius: 1rem;
-  padding: 2rem;
+  padding: 1.2rem;
 `
