@@ -4,24 +4,25 @@ import { Box } from '../styles'
 import theme from '../theme'
 import { US_STATES, type StateOption } from '../utils'
 import { IoCloseOutline } from "react-icons/io5";
+import { useAppDispatch, useAppSelector } from '../store'
+import { setMaxPrice, setMinPrice } from '../store/slices/Filters/filters.slice'
 
 export default function Filters() {
   const [stateInput, setStateInput] = useState('')
   const [selectedStates, setSelectedStates] = useState<StateOption[]>([])
   const [statesDropdownIsOpen, setStatesDropdownIsOpen] = useState(false)
-  const [minPrice, setMinPrice] = useState('')
-  const [maxPrice, setMaxPrice] = useState('')
   const wrapperRef = useRef<HTMLDivElement | null>(null)
 
-  const formatCurrency = (value: string): string => {
+  const { priceRange } = useAppSelector((state) => state.filters)
+  const dispatch = useAppDispatch()
+
+  const formatCurrency = (value: number): string => {
     if (!value) return ''
-    const numValue = parseFloat(value)
-    if (isNaN(numValue)) return ''
-    return `$ ${Math.round(numValue).toLocaleString('en-US')}`
+    return `$ ${Math.round(value).toLocaleString('en-US')}`
   }
 
-  const handlePriceInput = (value: string): string => {
-    return value.replace(/[^0-9.]/g, '')
+  const handlePriceInput = (value: string): number => {
+    return parseFloat(value.replace(/[^0-9.]/g, ''))
   }
 
   const filteredStates = useMemo(() => {
@@ -58,8 +59,8 @@ export default function Filters() {
           <input 
             id='min-price' 
             type='text' 
-            value={formatCurrency(minPrice)}
-            onChange={(e) => setMinPrice(handlePriceInput(e.target.value))}
+            value={formatCurrency(priceRange.min)}
+            onChange={(e) => dispatch(setMinPrice(handlePriceInput(e.target.value)))}
             placeholder='$ 0'
             maxLength={9}
             />
@@ -69,8 +70,8 @@ export default function Filters() {
           <input 
             id='max-price' 
             type='text' 
-            value={formatCurrency(maxPrice)}
-            onChange={(e) => setMaxPrice(handlePriceInput(e.target.value))}
+            value={formatCurrency(priceRange.max)}
+            onChange={(e) => dispatch(setMaxPrice(handlePriceInput(e.target.value)))}
             placeholder='$ 0'
             maxLength={9}
           />

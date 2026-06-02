@@ -1,7 +1,7 @@
 export type FiltersState = {
-  price: {
-    min: number | null;
-    max: number | null;
+  priceRange: {
+    min: number;
+    max: number;
   }
   states: {
     searchInput: string;

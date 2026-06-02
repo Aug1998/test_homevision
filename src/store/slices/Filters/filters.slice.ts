@@ -2,7 +2,7 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type { FiltersState } from './filters.type';
 
 const initialState: FiltersState = {
-  price: {
+  priceRange: {
     min: 0,
     max: 0
   },
@@ -19,11 +19,11 @@ export const favoritesSlice = createSlice({
   reducers: {
     setMinPrice: (state, action: PayloadAction<number | undefined>) => {
       if (action.payload === undefined) return
-      state.price.min = action.payload
+      state.priceRange.min = action.payload
     },
     setMaxPrice: (state, action: PayloadAction<number | undefined>) => {
       if (action.payload === undefined) return
-      state.price.max = action.payload
+      state.priceRange.max = action.payload
     },
   },
 });
