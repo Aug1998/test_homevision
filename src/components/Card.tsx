@@ -34,14 +34,21 @@ const Container = styled(Box)`
   padding: unset;
   width: 100%;
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 3fr 7fr;
   grid-template-rows: auto;
   grid-template-areas:
     'image content'
   ;
-  gap: 0.5rem;
+  gap: 1.2rem;
   position: relative;
+  transition: all 0.2s;
   
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+    transition: all 0.2s;
+  }
+
   img {
     width: 100%;
     height: 12rem;
@@ -55,16 +62,19 @@ const Container = styled(Box)`
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 0.25rem;
-
+    justify-content: flex-start;
+    padding: 1.5rem 0;
+    gap: 0.1rem;
     
     .price {
-      font-size: 1.5rem;
+      font-size: 1.75rem;
       font-weight: 700;
       color: ${theme.colors.primary};
+      margin-bottom: 0.1rem;
       svg {
         color: ${theme.colors.primary};
-        transform: scale(1.2) translateY(-1px);
+        transform: scale(1.4) translateY(-2px);
+        margin-right: -0.2rem;
       }
     }
     
@@ -76,7 +86,7 @@ const Container = styled(Box)`
       font-weight: 500;
       color: ${theme.colors.textBlack};
       svg {
-        transform: scale(1.1) translateY(2px);
+        transform: scale(1.1) translateY(3px);
       }
     }
   }
