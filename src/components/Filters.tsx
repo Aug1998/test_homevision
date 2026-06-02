@@ -9,7 +9,20 @@ export default function Filters() {
   const [stateInput, setStateInput] = useState('')
   const [selectedStates, setSelectedStates] = useState<StateOption[]>([])
   const [statesDropdownIsOpen, setStatesDropdownIsOpen] = useState(false)
+  const [minPrice, setMinPrice] = useState('')
+  const [maxPrice, setMaxPrice] = useState('')
   const wrapperRef = useRef<HTMLDivElement | null>(null)
+
+  const formatCurrency = (value: string): string => {
+    if (!value) return ''
+    const numValue = parseFloat(value)
+    if (isNaN(numValue)) return ''
+    return `$ ${Math.round(numValue).toLocaleString('en-US')}`
+  }
+
+  const handlePriceInput = (value: string): string => {
+    return value.replace(/[^0-9.]/g, '')
+  }
 
   const filteredStates = useMemo(() => {
     const normalized = stateInput.trim().toLowerCase()
@@ -42,11 +55,25 @@ export default function Filters() {
       <PriceRangeContainer>
         <div>
           <label htmlFor='min-price'>Min price</label>
-          <input id='min-price' type='number' />
+          <input 
+            id='min-price' 
+            type='text' 
+            value={formatCurrency(minPrice)}
+            onChange={(e) => setMinPrice(handlePriceInput(e.target.value))}
+            placeholder='$ 0'
+            maxLength={9}
+            />
         </div>
         <div>
           <label htmlFor='max-price'>Max price</label>
-          <input id='max-price' type='number' />
+          <input 
+            id='max-price' 
+            type='text' 
+            value={formatCurrency(maxPrice)}
+            onChange={(e) => setMaxPrice(handlePriceInput(e.target.value))}
+            placeholder='$ 0'
+            maxLength={9}
+          />
         </div>
       </PriceRangeContainer>
 
@@ -236,6 +263,10 @@ const SearchInput = styled.input`
     outline: none;
     border-radius: 0.5rem 0.5rem 0 0;
   }
+
+  &::placeholder {
+    color: ${theme.colors.textGrey};
+  }
 `
 
 const Dropdown = styled.div`
@@ -266,7 +297,7 @@ const Option = styled.button`
   &:hover {
     background: ${theme.colors.primaryLight};
   }
-
+  
   code {
     color: ${theme.colors.textGrey};
     font-size: 0.8rem;
