@@ -1,18 +1,19 @@
 import styled from '@emotion/styled'
 import theme from '../theme'
 import Button from './Button'
+import { Link } from "react-router"
 
 export default function NavBar() {
   return (
     <Container>
       <Content>
-        <a href="/">
+        <Link to="/">
           <Logo src="https://cdn.prod.website-files.com/683f6efa9ca6a7e1d412fdbc/683f70dc65eb1baa61d8c626_Logo.svg" />
-        </a>
+        </Link>
         <Nav>
           <NavLinks>
-            <a href="/about">Platform</a>
-            <a href="/contact">Contact</a>
+            <Link to="/about">Platform</Link>
+            <Link to="/favorites">Favorites</Link>
           </NavLinks>
           <NavCTAs>
             <Button variant="secondary">Get Started</Button>
