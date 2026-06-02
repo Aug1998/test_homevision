@@ -1,5 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import type { FiltersState } from './filters.type';
+import type { FiltersState, StateOption } from './filters.type';
+import { ALL_STATES } from './filters.util';
 
 const initialState: FiltersState = {
   priceRange: {
@@ -9,7 +10,8 @@ const initialState: FiltersState = {
   states: {
     searchInput: '',
     selectedStates: [],
-    dropdownIsOpen: false
+    dropdownIsOpen: false,
+    dropdownOptions: ALL_STATES
   }
 }
 
@@ -25,8 +27,42 @@ export const favoritesSlice = createSlice({
       if (action.payload === undefined) return
       state.priceRange.max = action.payload
     },
+    setStatesDropdownIsOpen: (state, action: PayloadAction<boolean>) => {
+      state.states.dropdownIsOpen = action.payload
+    },
+    setStatesSearchInput: (state, action: PayloadAction<string>) => {
+      state.states.searchInput = action.payload
+      state.states.dropdownOptions = filterStatesDropdownOptions(state.states.selectedStates, action.payload)
+    },
+    unselectState: (state, action: PayloadAction<string>) => {
+      state.states.selectedStates = state.states.selectedStates.filter((option) => option.value !== action.payload)
+      state.states.dropdownOptions = filterStatesDropdownOptions(state.states.selectedStates, state.states.searchInput)
+    },
+    selectState: (state, action: PayloadAction<StateOption>) => {
+      state.states.selectedStates.push(action.payload)
+      state.states.dropdownOptions = filterStatesDropdownOptions(state.states.selectedStates, state.states.searchInput)
+    }
   },
 });
 
-export const { setMinPrice, setMaxPrice } = favoritesSlice.actions;
+export const { setMinPrice, setMaxPrice, setStatesDropdownIsOpen, setStatesSearchInput, unselectState, selectState } = favoritesSlice.actions;
 export default favoritesSlice.reducer;
+
+const filterStatesDropdownOptions = (selectedOptions: StateOption[], searchInput: string) => {
+  const normalized = searchInput.trim().toLowerCase()
+
+  return ALL_STATES.filter((state) => {
+    if (selectedOptions.some((selected) => selected.value === state.value)) {
+      return false
+    }
+
+    if (!normalized) {
+      return true
+    }
+
+    return (
+      state.label.toLowerCase().includes(normalized) ||
+      state.value.toLowerCase().includes(normalized)
+    )
+  })
+}

@@ -5,7 +5,13 @@ export type FiltersState = {
   }
   states: {
     searchInput: string;
-    selectedStates: string[];
-    dropdownIsOpen: boolean
+    selectedStates: StateOption[];
+    dropdownIsOpen: boolean;
+    dropdownOptions: StateOption[]
   };
 };
+
+export type StateOption = {
+  value: string
+  label: string
+}

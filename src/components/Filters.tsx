@@ -1,19 +1,14 @@
-import { useMemo, useRef, useState } from 'react'
+import { useRef } from 'react'
 import styled from '@emotion/styled'
 import { Box } from '../styles'
 import theme from '../theme'
-import { US_STATES, type StateOption } from '../utils'
 import { IoCloseOutline } from "react-icons/io5";
 import { useAppDispatch, useAppSelector } from '../store'
-import { setMaxPrice, setMinPrice } from '../store/slices/Filters/filters.slice'
+import { selectState, setMaxPrice, setMinPrice, setStatesDropdownIsOpen, setStatesSearchInput, unselectState } from '../store/slices/Filters/filters.slice'
 
 export default function Filters() {
-  const [stateInput, setStateInput] = useState('')
-  const [selectedStates, setSelectedStates] = useState<StateOption[]>([])
-  const [statesDropdownIsOpen, setStatesDropdownIsOpen] = useState(false)
   const wrapperRef = useRef<HTMLDivElement | null>(null)
-
-  const { priceRange } = useAppSelector((state) => state.filters)
+  const { priceRange, states: { dropdownIsOpen, searchInput, selectedStates, dropdownOptions } } = useAppSelector((state) => state.filters)
   const dispatch = useAppDispatch()
 
   const formatCurrency = (value: number): string => {
@@ -25,30 +20,6 @@ export default function Filters() {
     return parseFloat(value.replace(/[^0-9.]/g, ''))
   }
 
-  const filteredStates = useMemo(() => {
-    const normalized = stateInput.trim().toLowerCase()
-
-    return US_STATES.filter((state) => {
-      if (selectedStates.some((selected) => selected.value === state.value)) {
-        return false
-      }
-
-      if (!normalized) {
-        return true
-      }
-
-      return (
-        state.label.toLowerCase().includes(normalized) ||
-        state.value.toLowerCase().includes(normalized)
-      )
-    })
-  }, [stateInput, selectedStates])
-
-
-  function handleUnselectState(value: string) {
-    setSelectedStates((current) => current.filter((state) => state.value !== value))
-  }
-
   return (
     <Container>
       <h3>Filters</h3>
@@ -56,20 +27,20 @@ export default function Filters() {
       <PriceRangeContainer>
         <div>
           <label htmlFor='min-price'>Min price</label>
-          <input 
-            id='min-price' 
-            type='text' 
+          <input
+            id='min-price'
+            type='text'
             value={formatCurrency(priceRange.min)}
             onChange={(e) => dispatch(setMinPrice(handlePriceInput(e.target.value)))}
             placeholder='$ 0'
             maxLength={9}
-            />
+          />
         </div>
         <div>
           <label htmlFor='max-price'>Max price</label>
-          <input 
-            id='max-price' 
-            type='text' 
+          <input
+            id='max-price'
+            type='text'
             value={formatCurrency(priceRange.max)}
             onChange={(e) => dispatch(setMaxPrice(handlePriceInput(e.target.value)))}
             placeholder='$ 0'
@@ -85,7 +56,7 @@ export default function Filters() {
             {selectedStates.map((selectedState) => (
               <Tag
                 key={selectedState.value}
-                onClick={() => handleUnselectState(selectedState.value)}
+                onClick={() => dispatch(unselectState(selectedState.value))}
               >
                 {selectedState.label}
                 <IoCloseOutline />
@@ -95,35 +66,35 @@ export default function Filters() {
 
           <SearchInput
             id='state-search'
-            value={stateInput}
+            value={searchInput}
             onChange={(event) => {
-              setStateInput(event.target.value)
-              setStatesDropdownIsOpen(true)
+              dispatch(setStatesSearchInput(event.target.value))
+              dispatch(setStatesDropdownIsOpen(true))
             }}
-            onFocus={() => setStatesDropdownIsOpen(true)}
+            onFocus={() => dispatch(setStatesDropdownIsOpen(true))}
             onBlur={() => {
               // Delay closing to allow click events to register
               setTimeout(() => {
                 if (!wrapperRef.current?.contains(document.activeElement)) {
-                  setStatesDropdownIsOpen(false)
+                  dispatch(setStatesDropdownIsOpen(false))
                 }
               }, 10)
             }}
             placeholder='Search states'
-            aria-expanded={statesDropdownIsOpen}
+            aria-expanded={dropdownIsOpen}
             aria-haspopup='listbox'
           />
 
-          <Dropdown role='listbox' hidden={!statesDropdownIsOpen}>
-            {filteredStates.length > 0 ? (
-              filteredStates.map((state) => (
+          <Dropdown role='listbox' hidden={!dropdownIsOpen}>
+            {dropdownOptions.length > 0 ? (
+              dropdownOptions.map((state) => (
                 <Option
                   key={state.value}
                   type='button'
                   onClick={() => {
-                    setSelectedStates((current) => [...current, state])
-                    setStateInput('')
-                    setStatesDropdownIsOpen(false)
+                    dispatch(selectState(state))
+                    dispatch(setStatesSearchInput(''))
+                    dispatch(setStatesDropdownIsOpen(false))
                   }}
                 >
                   <p>{state.label}</p>
