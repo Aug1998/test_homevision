@@ -5,7 +5,8 @@ import { IoLocationSharp, IoPersonSharp } from "react-icons/io5";
 import { FaDollarSign } from "react-icons/fa";
 import { MdOutlineFavorite, MdOutlineFavoriteBorder } from "react-icons/md";
 import theme from '../theme';
-import { useFavoritesContext } from '../FavoritesContext'
+import { useAppDispatch } from '../store';
+import { toggleFavoriteHouseId } from '../store/slices/Favorites/favorites.slice';
 
 type Props = React.HTMLAttributes<HTMLDivElement> & {
   house?: House
@@ -13,7 +14,7 @@ type Props = React.HTMLAttributes<HTMLDivElement> & {
 }
 
 export default function Card({ house, isFavorite }: Props) {
-  const { toggleFavoriteHouseId } = useFavoritesContext();
+  const dispatch = useAppDispatch();
 
   return (
     <Container id={`house-card-${house?.id}`} key={house?.id}>
@@ -23,7 +24,7 @@ export default function Card({ house, isFavorite }: Props) {
         <h3 className='address'><IoLocationSharp />{house?.address}</h3>
         <p className='homeowner'><IoPersonSharp />{house?.homeowner}</p>
       </div>
-      <FavoriteButton isFavorite={isFavorite} onClick={() => toggleFavoriteHouseId(house?.id)}>
+      <FavoriteButton isFavorite={isFavorite} onClick={() => dispatch(toggleFavoriteHouseId(house?.id))}>
         {isFavorite ? <MdOutlineFavorite /> : <MdOutlineFavoriteBorder />}
       </FavoriteButton>
     </Container>

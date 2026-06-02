@@ -6,10 +6,11 @@ import { useInView } from 'react-intersection-observer'
 import { useEffect } from 'react'
 import LoadingIcon from './LoadingIcon'
 import theme from '../theme'
-import { useFavoritesContext } from '../FavoritesContext'
+import { useAppSelector } from '../store'
 
 export default function ScrollingArea() {
-  const { isFavoriteHouseId } = useFavoritesContext();
+  const { favoritesIds } = useAppSelector((state) => state.favorites);
+
 
   const { data, fetchNextPage, isFetchingNextPage } = useInfiniteQuery({
     queryKey: ['houses'],
@@ -40,7 +41,7 @@ export default function ScrollingArea() {
             id={`house-card-${house.id}`}
             key={`house-card-${house.id}`}
             house={house}
-            isFavorite={isFavoriteHouseId(house.id)}
+            isFavorite={favoritesIds.includes(house.id)}
           />
         )
       })}
