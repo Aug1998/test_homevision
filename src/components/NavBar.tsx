@@ -50,6 +50,10 @@ const Content = styled.div`
 
 const Logo = styled.img`
   width: 120px;
+  transition: all 0.2s ease-in-out;
+  &:hover {
+    opacity: 0.7;
+  }
 `
 
 const Nav = styled.nav`
