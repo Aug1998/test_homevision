@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type { FavoritesState } from './favorites.type';
-import { getFavoriteHousesFromLocalStorage, setFavoriteHousesInLocalStorage } from './favorites.utils';
+import { getFavoriteHousesFromLocalStorage, setFavoriteHousesInLocalStorage } from './favorites.util';
 
 const initialState: FavoritesState = { 
   favoritesIds: getFavoriteHousesFromLocalStorage()
