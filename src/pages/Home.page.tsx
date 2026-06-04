@@ -1,12 +1,17 @@
 import styled from '@emotion/styled'
 import Filters from '../components/Filters'
-import ScrollingArea from '../components/ScrollingArea'
+import ScrollingArea from '../components/HouseCardsList'
+import { useInfiniteQuery } from '@tanstack/react-query'
+import { housesQueries } from '../queries/house.queries'
 
 export default function Home() {
+  const { data } = useInfiniteQuery(housesQueries.infinite())
+  const houses = data?.pages.flat()
+
   return (
     <Main>
       <Filters />
-      <ScrollingArea />
+      <ScrollingArea houses={houses || []} />
     </Main>
   )
 }

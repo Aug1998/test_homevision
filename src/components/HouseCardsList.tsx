@@ -1,29 +1,21 @@
 import Card from './Card'
 import styled from '@emotion/styled'
 import { useInfiniteQuery } from '@tanstack/react-query'
-import { fetchHouses } from '../api/houses'
 import { useInView } from 'react-intersection-observer'
 import { useEffect } from 'react'
 import LoadingIcon from './LoadingIcon'
 import theme from '../theme'
 import { useAppSelector } from '../store'
+import { housesQueries } from '../queries/house.queries'
+import type { House } from '../api'
 
-export default function ScrollingArea() {
+interface Props {
+  houses: House[]
+}
+
+export default function HouseCardsList({ houses }: Props) {
   const { favoritesIds } = useAppSelector((state) => state.favorites);
-
-
-  const { data, fetchNextPage, isFetchingNextPage } = useInfiniteQuery({
-    queryKey: ['houses'],
-    queryFn: fetchHouses,
-    initialPageParam: 1,
-    getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.length === 0) return undefined
-      return allPages.length + 1
-    },
-  })
-
-  const houses = data?.pages.flat()
-
+  const { fetchNextPage, isFetchingNextPage } = useInfiniteQuery(housesQueries.infinite())
   const { ref, inView } = useInView()
 
   useEffect(() => {
@@ -31,7 +23,6 @@ export default function ScrollingArea() {
       fetchNextPage()
     }
   }, [inView, fetchNextPage])
-
 
   return (
     <Container>

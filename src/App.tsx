@@ -1,7 +1,7 @@
 import NavBar from "./components/NavBar"
 import { BrowserRouter, Route, Routes } from "react-router"
-import Home from "./pages/Home"
-import Favorites from "./pages/Favorites"
+import Home from "./pages/Home.page"
+import Favorites from "./pages/Favorites.page"
 
 function App() {
   return (
