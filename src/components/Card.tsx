@@ -24,6 +24,7 @@ export default function Card({ house, isFavorite }: Props) {
         <h3 className='address'><IoLocationSharp />{house?.address}</h3>
         <p className='homeowner'><IoPersonSharp />{house?.homeowner}</p>
       </div>
+      <Id>{house?.id}</Id>
       <FavoriteButton isFavorite={isFavorite} onClick={() => dispatch(toggleFavoriteHouseId(house?.id))}>
         {isFavorite ? <MdOutlineFavorite /> : <MdOutlineFavoriteBorder />}
       </FavoriteButton>
@@ -123,3 +124,11 @@ const FavoriteButton = styled.button<{ isFavorite?: boolean }>`
     }
   }
 ` 
+
+const Id = styled.span`
+  position: absolute;
+  bottom: 0.2rem;
+  right: 0.4rem;
+  font-size: 0.7rem;
+  color: ${theme.colors.grey};
+`
