@@ -4,13 +4,16 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 import { housesQueries } from '../queries/house.queries'
 import { useInView } from 'react-intersection-observer'
 import { useAppSelector } from '../store'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import Card from '../components/Card'
 import LoadingIcon from '../components/LoadingIcon'
 import theme from '../theme'
+import type { House } from '../api'
+import { priceIsInRange } from '../store/slices/Filters/filters.util'
 
 export default function HomePage() {
   const { favoritesIds } = useAppSelector((state) => state.favorites);
+  const { states, priceRange } = useAppSelector((state) => state.filters);
   const { data, fetchNextPage, isFetchingNextPage } = useInfiniteQuery(housesQueries.infinite())
   const { ref, inView } = useInView()
   const houses = data?.pages.flat()
@@ -21,11 +24,20 @@ export default function HomePage() {
     }
   }, [inView, fetchNextPage])
 
+  const filteredHouses = useMemo<House[]>(
+    () => {
+      return houses?.filter((house: House) => {
+        return priceIsInRange(house.price, priceRange)
+      }) || []
+    },
+    [priceRange, houses]
+  );
+
   return (
     <Main>
       <Filters />
       <Container>
-        {houses?.map((house) => {
+        {filteredHouses?.map((house) => {
           return (
             <Card
               id={`house-card-${house.id}`}

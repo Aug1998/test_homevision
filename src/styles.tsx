@@ -32,6 +32,7 @@ export const GlobalStyle = css`
     align-items: center;
     justify-content: flex-start;
     overflow-y: scroll;
+    min-height: 100vh;
   }
   a {
     text-decoration: none;

@@ -1,4 +1,4 @@
-import type { StateOption } from "./filters.type";
+import type { FiltersState, StateOption } from "./filters.type";
 
 export const ALL_STATES: StateOption[] = [
   { value: 'AL', label: 'Alabama' },
@@ -52,3 +52,16 @@ export const ALL_STATES: StateOption[] = [
   { value: 'WI', label: 'Wisconsin' },
   { value: 'WY', label: 'Wyoming' },
 ]
+
+export const priceIsInRange = (price: number, priceRange: FiltersState['priceRange']) => {
+  if (!priceRange.min) {
+    if (!priceRange.max) {
+      return true
+    }
+    return price <= priceRange.max
+  }
+  if (!priceRange.max) {
+    return price >= priceRange.min
+  }
+  return price >= priceRange.min && price <= priceRange.max
+}

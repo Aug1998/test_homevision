@@ -14,7 +14,7 @@ export default function FavoritesPage() {
   const favoriteHouses = useMemo(
     () => {
       const favoritesIdsSet = new Set(favoritesIds);
-      return data?.filter((h: House) => favoritesIdsSet.has(h.id)) || []
+      return data?.filter((house: House) => favoritesIdsSet.has(house.id)) || []
     },
     [data, favoritesIds]
   );
