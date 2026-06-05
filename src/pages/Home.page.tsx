@@ -14,8 +14,7 @@ import { addressIsInSelectedStates, priceIsInRange } from '../store/slices/Filte
 export default function HomePage() {
   const { favoritesIds } = useAppSelector((state) => state.favorites);
   const { states, priceRange } = useAppSelector((state) => state.filters);
-  const itemsPerPage = states.selectedStates.length > 0 ? 100 : 10
-  const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } = useInfiniteQuery(housesQueries.infinite(itemsPerPage))
+  const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } = useInfiniteQuery(housesQueries.infinite(25))
   const { ref, inView } = useInView()
   const houses = data?.pages.flat()
 
@@ -70,7 +69,7 @@ export default function HomePage() {
         }) : <LoadingIcon />}
         <Sentinel ref={ref}></Sentinel>
         <LoadingBar isVisible={isFetchingNextPage}>
-          {isFetchingNextPage ? <LoadingIcon /> : ''}
+          <LoadingIcon text='Searching your ideal home'/>
         </LoadingBar>
       </Container>
     </Main>
@@ -114,7 +113,6 @@ const LoadingBar = styled.div<{ isVisible: boolean }>`
   align-items: flex-end;
   background: linear-gradient(0deg,${theme.colors.primaryLight} 0%, transparent 100%);
   height: 6rem;
-
   pointer-events: none;
   backdrop-filter: blur(12px);
   mask-image: linear-gradient(to top, black 0%, black 20%, transparent 100%);

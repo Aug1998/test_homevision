@@ -11,7 +11,7 @@ export const housesQueries = {
       return allPages.length + 1
     },
   }),
-  amount: (itemsPerPage: number = 50) => ({
+  amount: (itemsPerPage: number) => ({
     queryKey: ["houses", { itemsPerPage }] as const,
     queryFn: fetchHouses,
   }),

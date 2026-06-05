@@ -1,11 +1,16 @@
 import styled from '@emotion/styled'
 import theme from '../theme'
 
-export default function LoadingIcon() {
+interface Props {
+  text?: string;
+}
+
+export default function LoadingIcon({ text }: Props) {
   const color = theme.colors.primary
 
   return (
     <Container>
+      {text && <p>{text}</p>}
       <svg fill={color} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <circle cx="4" cy="12" r="0">
           <animate begin="0;spinner_z0Or.end" attributeName="r" calcMode="spline" dur="0.5s" keySplines=".36,.6,.31,1" values="0;3" fill="freeze" />
@@ -47,8 +52,11 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 999;
+  gap: 0.5rem;
   svg {
     width: 2.5rem;
+  }
+  p {
+    transform: translateY(-1px);
   }
 `
