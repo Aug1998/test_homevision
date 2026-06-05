@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import theme from '../theme'
 import Button from './Button'
 import { Link, useLocation } from "react-router"
+import { FaGithub, FaLinkedin } from "react-icons/fa";
 
 export default function NavBar() {
   const { pathname } = useLocation()
@@ -18,8 +19,14 @@ export default function NavBar() {
             <StyledLink isActive={pathname === "/favorites"} to="/favorites">Favorites</StyledLink>
           </NavLinks>
           <NavCTAs>
-            <Button to="https://github.com/Aug1998/test_homevision" target="_blank" variant="secondary">Github</Button>
-            <Button to="https://www.linkedin.com/in/augusto-pruvost/"  target="_blank">Get in touch</Button>
+            <Button to="https://github.com/Aug1998/test_homevision" target="_blank" variant="secondary">
+              <FaGithub />
+              Github
+            </Button>
+            <Button to="https://www.linkedin.com/in/augusto-pruvost/"  target="_blank">
+              <FaLinkedin />
+              Get in touch
+            </Button>
           </NavCTAs>
         </Nav>
       </Content>
@@ -30,7 +37,7 @@ export default function NavBar() {
 const Container = styled.div`
   width: 100%;
   display: flex;
-  height: 77px;
+  height: 4rem;
   align-items: center;
   justify-content: center;
   padding: 1rem;

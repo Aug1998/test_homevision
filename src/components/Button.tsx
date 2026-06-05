@@ -27,8 +27,11 @@ const Container = styled(Link)<{ variant: 'primary' | 'secondary' }>`
   line-height: 1.5;
   transition: border-color .3s ease-in-out, background-color .3s ease-in-out;
   box-shadow: 0 1px 2px #0000000f, 0 1px 3px #0000001a;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
   ${(props) => props.variant === 'primary' ? primaryStyle : secondaryStyle}
-  `
+`
 
 const primaryStyle = css`
   color: ${theme.colors.white};
