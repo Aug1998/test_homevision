@@ -1,9 +1,11 @@
 import styled from '@emotion/styled'
 import theme from '../theme'
 import Button from './Button'
-import { Link } from "react-router"
+import { Link, useLocation } from "react-router"
 
 export default function NavBar() {
+  const { pathname } = useLocation()
+  
   return (
     <Container>
       <Content>
@@ -12,8 +14,8 @@ export default function NavBar() {
         </Link>
         <Nav>
           <NavLinks>
-            <Link to="/about">Platform</Link>
-            <Link to="/favorites">Favorites</Link>
+            <StyledLink isActive={pathname === "/"} to="/">Home</StyledLink>
+            <StyledLink isActive={pathname === "/favorites"} to="/favorites">Favorites</StyledLink>
           </NavLinks>
           <NavCTAs>
             <Button variant="secondary">Get Started</Button>
@@ -70,16 +72,17 @@ const Nav = styled.nav`
 const NavLinks = styled.div`
   display: flex;
   gap: 4px;
-  a {
-    padding: 0.5rem 1rem;
-    color: ${theme.colors.textBlack};
-    &:hover {
-      color: ${theme.colors.primary};
-    }
-  }
 `
 
 const NavCTAs = styled.div`
   display: flex;
   gap: 1rem;
+`
+
+const StyledLink = styled(Link) <{ isActive: boolean }>`
+  padding: 0.5rem 1rem;
+  color: ${props => props.isActive ? theme.colors.primary : theme.colors.textBlack};
+  &:hover {
+    color: ${theme.colors.primary};
+  }
 `
