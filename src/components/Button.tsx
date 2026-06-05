@@ -29,7 +29,7 @@ const Container = styled(Link)<{ variant: 'primary' | 'secondary' }>`
   box-shadow: 0 1px 2px #0000000f, 0 1px 3px #0000001a;
   display: flex;
   align-items: center;
-  gap: 0.2rem;
+  gap: 0.3rem;
   ${(props) => props.variant === 'primary' ? primaryStyle : secondaryStyle}
 `
 
