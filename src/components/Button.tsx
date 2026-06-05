@@ -2,21 +2,22 @@ import styled from '@emotion/styled'
 import React from 'react'
 import theme from '../theme'
 import { css } from '@emotion/react'
+import { Link } from 'react-router'
 
-type Props = {
+type Props = React.ComponentProps<typeof Link> & {
   variant?: 'primary' | 'secondary'
   children: React.ReactNode
 }
 
-export default function Button({ children, variant = 'primary' }: Props) {
+export default function Button({ to, target, children, variant = 'primary' }: Props) {
   return (
-    <Container variant={variant}>
+    <Container to={to} target={target} variant={variant}>
       {children}
     </Container >
   )
 }
 
-const Container = styled.a<{ variant: 'primary' | 'secondary' }>`
+const Container = styled(Link)<{ variant: 'primary' | 'secondary' }>`
   cursor: pointer;
   border-radius: 8px;
   height: auto;

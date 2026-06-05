@@ -5,7 +5,7 @@ import { Link, useLocation } from "react-router"
 
 export default function NavBar() {
   const { pathname } = useLocation()
-  
+
   return (
     <Container>
       <Content>
@@ -18,8 +18,8 @@ export default function NavBar() {
             <StyledLink isActive={pathname === "/favorites"} to="/favorites">Favorites</StyledLink>
           </NavLinks>
           <NavCTAs>
-            <Button variant="secondary">Get Started</Button>
-            <Button>Get Started</Button>
+            <Button to="https://github.com/Aug1998/test_homevision" target="_blank" variant="secondary">Github</Button>
+            <Button to="https://www.linkedin.com/in/augusto-pruvost/"  target="_blank">Get in touch</Button>
           </NavCTAs>
         </Nav>
       </Content>
