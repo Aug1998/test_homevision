@@ -3,7 +3,7 @@ import { fetchHouses } from "../api/client";
 
 export const housesQueries = {
   infinite: (itemsPerPage: number = 10) => ({
-    queryKey: ["houses", { itemsPerPage }],
+    queryKey: ["houses", { itemsPerPage }] as const,
     queryFn: fetchHouses,
     initialPageParam: 1,
     getNextPageParam: (lastPage: House[], allPages: House[][]) => {
@@ -12,7 +12,7 @@ export const housesQueries = {
     },
   }),
   amount: (itemsPerPage: number = 50) => ({
-    queryKey: ["houses", { itemsPerPage }],
+    queryKey: ["houses", { itemsPerPage }] as const,
     queryFn: fetchHouses,
   }),
 };

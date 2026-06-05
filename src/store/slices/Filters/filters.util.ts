@@ -65,3 +65,13 @@ export const priceIsInRange = (price: number, priceRange: FiltersState['priceRan
   }
   return price >= priceRange.min && price <= priceRange.max
 }
+
+const getStateFromAddress = (address: string): string => {
+  return address.split(", ")[1]?.slice(0, 2)
+}
+
+export const addressIsInSelectedStates = (address: string, selectedStates: StateOption[]): boolean => {
+  if (selectedStates.length === 0) return true
+  const state = getStateFromAddress(address)
+  return selectedStates.map(state => state.value).includes(state)
+}

@@ -4,34 +4,54 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 import { housesQueries } from '../queries/house.queries'
 import { useInView } from 'react-intersection-observer'
 import { useAppSelector } from '../store'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import Card from '../components/Card'
 import LoadingIcon from '../components/LoadingIcon'
 import theme from '../theme'
 import type { House } from '../api'
-import { priceIsInRange } from '../store/slices/Filters/filters.util'
+import { addressIsInSelectedStates, priceIsInRange } from '../store/slices/Filters/filters.util'
 
 export default function HomePage() {
   const { favoritesIds } = useAppSelector((state) => state.favorites);
   const { states, priceRange } = useAppSelector((state) => state.filters);
-  const { data, fetchNextPage, isFetchingNextPage } = useInfiniteQuery(housesQueries.infinite())
+  const { data, fetchNextPage, isFetchingNextPage, hasNextPage } = useInfiniteQuery(housesQueries.infinite())
   const { ref, inView } = useInView()
   const houses = data?.pages.flat()
-
-  useEffect(() => {
-    if (inView) {
-      fetchNextPage()
-    }
-  }, [inView, fetchNextPage])
 
   const filteredHouses = useMemo<House[]>(
     () => {
       return houses?.filter((house: House) => {
-        return priceIsInRange(house.price, priceRange)
+        return priceIsInRange(house.price, priceRange) && addressIsInSelectedStates(house.address, states.selectedStates)
       }) || []
     },
-    [priceRange, houses]
+    [houses, priceRange, states]
   );
+
+  const inViewRef = useRef(inView)
+  const hasNextPageRef = useRef(hasNextPage)
+  const isFetchingRef = useRef(isFetchingNextPage)
+
+  useEffect(() => { inViewRef.current = inView }, [inView])
+  useEffect(() => { hasNextPageRef.current = hasNextPage }, [hasNextPage])
+  useEffect(() => { isFetchingRef.current = isFetchingNextPage }, [isFetchingNextPage])
+
+  useEffect(() => {
+    let cancelled = false
+    if (!inView) return
+
+    const run = async () => {
+      while (!cancelled && inViewRef.current && hasNextPageRef.current) {
+        if (isFetchingRef.current) {
+          await new Promise((r) => setTimeout(r, 200))
+          continue
+        }
+        await fetchNextPage()
+      }
+    }
+
+    run()
+    return () => { cancelled = true }
+  }, [inView, fetchNextPage])
 
   return (
     <Main>
