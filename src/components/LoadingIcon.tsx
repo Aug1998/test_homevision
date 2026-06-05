@@ -42,5 +42,13 @@ export default function LoadingIcon() {
 
 
 const Container = styled.div`
-  width: 2.5rem;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  svg {
+    width: 2.5rem;
+  }
 `

@@ -23,7 +23,7 @@ export default function NavBar() {
               <FaGithub />
               Github
             </Button>
-            <Button to="https://www.linkedin.com/in/augusto-pruvost/"  target="_blank">
+            <Button to="https://www.linkedin.com/in/augusto-pruvost/" target="_blank">
               <FaLinkedin />
               Get in touch
             </Button>
@@ -35,15 +35,15 @@ export default function NavBar() {
 }
 
 const Container = styled.div`
-  width: 100%;
+  width: calc(100vw - 13px);
   display: flex;
-  height: 4rem;
+  height: var(--navbar-height);
   align-items: center;
   justify-content: center;
   padding: 1rem;
   background-color: ${theme.colors.white};
   border-bottom: 1px solid ${theme.colors.grey};
-  position: sticky;
+  position: fixed;
   top: 0;
   z-index: 100;
 `

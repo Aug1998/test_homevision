@@ -14,7 +14,8 @@ import { addressIsInSelectedStates, priceIsInRange } from '../store/slices/Filte
 export default function HomePage() {
   const { favoritesIds } = useAppSelector((state) => state.favorites);
   const { states, priceRange } = useAppSelector((state) => state.filters);
-  const { data, fetchNextPage, isFetchingNextPage, hasNextPage } = useInfiniteQuery(housesQueries.infinite())
+  const itemsPerPage = states.selectedStates.length > 0 ? 100 : 10
+  const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } = useInfiniteQuery(housesQueries.infinite(itemsPerPage))
   const { ref, inView } = useInView()
   const houses = data?.pages.flat()
 
@@ -57,7 +58,7 @@ export default function HomePage() {
     <Main>
       <Filters />
       <Container>
-        {filteredHouses?.map((house) => {
+        {!isLoading ? filteredHouses?.map((house) => {
           return (
             <Card
               id={`house-card-${house.id}`}
@@ -66,7 +67,7 @@ export default function HomePage() {
               isFavorite={favoritesIds.includes(house.id)}
             />
           )
-        })}
+        }) : <LoadingIcon />}
         <Sentinel ref={ref}></Sentinel>
         <LoadingBar isVisible={isFetchingNextPage}>
           {isFetchingNextPage ? <LoadingIcon /> : ''}

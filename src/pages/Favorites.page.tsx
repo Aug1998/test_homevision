@@ -5,11 +5,12 @@ import { useMemo } from 'react'
 import { useAppSelector } from '../store'
 import type { House } from '../api'
 import Card from '../components/Card'
+import LoadingIcon from '../components/LoadingIcon'
 
 export default function FavoritesPage() {
   const { favoritesIds } = useAppSelector((state) => state.favorites);
   const maxFavoriteId = Math.max(...favoritesIds) + 1;
-  const { data } = useQuery<House[]>(housesQueries.amount(maxFavoriteId))
+  const { data, isLoading } = useQuery<House[]>(housesQueries.amount(maxFavoriteId))
 
   const favoriteHouses = useMemo(
     () => {
@@ -20,18 +21,22 @@ export default function FavoritesPage() {
   );
 
   return (
-    <Container>
-      {favoriteHouses?.map((house: House) => {
-        return (
-          <Card
-            id={`house-card-${house.id}`}
-            key={`house-card-${house.id}`}
-            house={house}
-            isFavorite={favoritesIds.includes(house.id)}
-          />
-        )
-      })}
-    </Container>
+    <>
+      {!isLoading ?
+        <Container>
+          {favoriteHouses?.map((house: House) => {
+            return (
+              <Card
+                id={`house-card-${house.id}`}
+                key={`house-card-${house.id}`}
+                house={house}
+                isFavorite={favoritesIds.includes(house.id)}
+              />
+            )
+          })}
+        </Container> : <LoadingIcon />
+      }
+    </>
   )
 }
 
@@ -41,6 +46,7 @@ const Container = styled.div`
   margin: 1rem 0;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 0.5rem;
   position: relative;
 `

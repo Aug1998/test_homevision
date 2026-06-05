@@ -114,7 +114,7 @@ export default function Filters() {
 const Container = styled(Box)`
   max-height: 88vh;
   position: sticky;
-  top: calc(72px + 1rem);
+  top: 1rem;
   z-index: 100;
   width: 100%;
   height: fit-content;

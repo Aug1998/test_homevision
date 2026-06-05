@@ -4,6 +4,7 @@ import theme from './theme'
 
 export const GlobalStyle = css`
   html {
+    --navbar-height: 4rem;
     font-size: 16px; 
   }
   *{
@@ -27,12 +28,13 @@ export const GlobalStyle = css`
   }
   #root {
     width: 100%;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
     overflow-y: scroll;
-    min-height: 100vh;
+    padding-top: var(--navbar-height);
   }
   a {
     text-decoration: none;
