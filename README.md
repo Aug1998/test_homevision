@@ -17,58 +17,29 @@ This project is a front-end application built with React, Vite, Redux Toolkit, R
 - TypeScript
 - Vite
 - Redux Toolkit
-- React Query (@tanstack/react-query)
-- Emotion (for css)
+- React Query (TanStack)
+- Emotion (for styles)
 - React Router
 - React Icons
-- ESLint
 
-## Project Structure
+## Running Locally
 
-- `src/main.tsx`
-  - app entrypoint
-  - wraps components with Redux `Provider` and React Query `QueryClientProvider`
-  - applies global Emotion styles
+1. Install dependencies:
 
-- `src/App.tsx`
-  - configures routing with `BrowserRouter`
-  - mounts the `NavBar`
-  - exposes `/` (home) and `/favorites`
+```bash
+npm install
+```
 
-- `src/pages/`
-  - `Home.page.tsx` — main listing with infinite scroll, filtering, and favorite state
-  - `Favorites.page.tsx` — renders saved houses from Redux state
+2. Create a `.env` file at the project root with your API endpoint:
 
-- `src/components/`
-  - `Filters.tsx` — price and location controls
-  - `Card.tsx` — house card display
-  - `NavBar.tsx` — navigation between Home and Favorites
-  - `LoadingIcon.tsx` — shared loading indicator
-  - `Button.tsx` — reusable button UI element
+```env
+VITE_HOUSES_API_URL=https://api.example.com/houses
+```
 
-- `src/store/`
-  - `store.ts` — Redux store setup
-  - `hooks.ts` — typed hooks for Redux dispatch and selector
-  - `slices/`
-    - `Favorites/` — favorite house IDs persistence and toggle behavior
-    - `Filters/` — price range and state filter logic
+3. Start the development server:
 
-- `src/api/`
-  - `client.ts` — fetches house data from `VITE_HOUSES_API_URL`
-  - `type.ts` — `House` and API response types
+```bash
+npm run dev
+```
 
-- `src/queries/house.queries.ts`
-  - React Query definitions for `infinite` and `amount` house queries
-
-- `vite.config.ts`
-  - Vite configuration using `@vitejs/plugin-react`
-
-## Notes
-
-- Favorite house IDs are stored in `localStorage` under `favoriteHousesIds`.
-- Filtering is done on the client using Redux state for price range and selected U.S. states.
-- The home page fetches paged results and uses the intersection observer to load more houses when the bottom sentinel becomes visible.
-
-## Recommended Node Version
-
-Use Node 18+ for best compatibility with Vite and the workspace dependencies.
+4. Open the local app in your browser at `http://localhost:5173`.
