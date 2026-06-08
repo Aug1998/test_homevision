@@ -1,73 +1,74 @@
-# React + TypeScript + Vite
+# HomeVision Test App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A small React + TypeScript + Vite application for browsing houses, filtering by price and state, and saving favorites.
 
-Currently, two official plugins are available:
+## Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+This project is a front-end application built with React, Vite, Redux Toolkit, React Query, and Emotion. It loads house data from an external API and provides:
 
-## React Compiler
+- a **Home** page with an infinite scrolling list of homes
+- a **Favorites** page for saved house cards
+- a **Filters** sidebar for price and state filtering
+- client-side favorites persistence using **localStorage**
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Tech Stack
 
-## Expanding the ESLint configuration
+- React.js
+- TypeScript
+- Vite
+- Redux Toolkit
+- React Query (@tanstack/react-query)
+- Emotion (for css)
+- React Router
+- React Icons
+- ESLint
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Project Structure
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- `src/main.tsx`
+  - app entrypoint
+  - wraps components with Redux `Provider` and React Query `QueryClientProvider`
+  - applies global Emotion styles
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- `src/App.tsx`
+  - configures routing with `BrowserRouter`
+  - mounts the `NavBar`
+  - exposes `/` (home) and `/favorites`
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- `src/pages/`
+  - `Home.page.tsx` — main listing with infinite scroll, filtering, and favorite state
+  - `Favorites.page.tsx` — renders saved houses from Redux state
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- `src/components/`
+  - `Filters.tsx` — price and location controls
+  - `Card.tsx` — house card display
+  - `NavBar.tsx` — navigation between Home and Favorites
+  - `LoadingIcon.tsx` — shared loading indicator
+  - `Button.tsx` — reusable button UI element
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- `src/store/`
+  - `store.ts` — Redux store setup
+  - `hooks.ts` — typed hooks for Redux dispatch and selector
+  - `slices/`
+    - `Favorites/` — favorite house IDs persistence and toggle behavior
+    - `Filters/` — price range and state filter logic
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- `src/api/`
+  - `client.ts` — fetches house data from `VITE_HOUSES_API_URL`
+  - `type.ts` — `House` and API response types
+
+- `src/queries/house.queries.ts`
+  - React Query definitions for `infinite` and `amount` house queries
+
+- `vite.config.ts`
+  - Vite configuration using `@vitejs/plugin-react`
+
+## Notes
+
+- Favorite house IDs are stored in `localStorage` under `favoriteHousesIds`.
+- Filtering is done on the client using Redux state for price range and selected U.S. states.
+- The home page fetches paged results and uses the intersection observer to load more houses when the bottom sentinel becomes visible.
+
+## Recommended Node Version
+
+Use Node 18+ for best compatibility with Vite and the workspace dependencies.
