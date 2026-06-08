@@ -15,9 +15,10 @@ import { ErrorMessage } from '../styles'
 export default function HomePage() {
   const { favoritesIds } = useAppSelector((state) => state.favorites);
   const { states, priceRange } = useAppSelector((state) => state.filters);
+  const itemsPerPage = states.selectedStates.length > 0 ? 50 : 10
   const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } = useInfiniteQuery(
     {
-      ...housesQueries.infinite(25),
+      ...housesQueries.infinite(itemsPerPage),
       enabled: isPriceRangeValid(priceRange),
     }
   )
@@ -42,22 +43,9 @@ export default function HomePage() {
   useEffect(() => { isFetchingRef.current = isFetchingNextPage }, [isFetchingNextPage])
 
   useEffect(() => {
-    let cancelled = false
-    if (!inView || !isPriceRangeValid(priceRange)) return
-
-    const run = async () => {
-      while (!cancelled && inViewRef.current && hasNextPageRef.current) {
-        if (isFetchingRef.current) {
-          await new Promise((r) => setTimeout(r, 200))
-          continue
-        }
-        await fetchNextPage()
-      }
-    }
-
-    run()
-    return () => { cancelled = true }
-  }, [inView, fetchNextPage, priceRange])
+    if (!inView || !isPriceRangeValid(priceRange) || !hasNextPage || isFetchingNextPage) return
+    fetchNextPage()
+  }, [inView, fetchNextPage, isFetchingNextPage, hasNextPage, priceRange, itemsPerPage])
 
   return (
     <Main>
