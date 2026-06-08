@@ -9,12 +9,17 @@ import Card from '../components/Card'
 import LoadingIcon from '../components/LoadingIcon'
 import theme from '../theme'
 import type { House } from '../api'
-import { addressIsInSelectedStates, priceIsInRange } from '../store/slices/Filters/filters.util'
+import { addressIsInSelectedStates, priceIsInRange, isPriceRangeValid } from '../store/slices/Filters/filters.util'
 
 export default function HomePage() {
   const { favoritesIds } = useAppSelector((state) => state.favorites);
   const { states, priceRange } = useAppSelector((state) => state.filters);
-  const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } = useInfiniteQuery(housesQueries.infinite(25))
+  const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } = useInfiniteQuery(
+    {
+      ...housesQueries.infinite(25),
+      enabled: isPriceRangeValid(priceRange),
+    }
+  )
   const { ref, inView } = useInView()
   const houses = data?.pages.flat()
 
@@ -37,7 +42,7 @@ export default function HomePage() {
 
   useEffect(() => {
     let cancelled = false
-    if (!inView) return
+    if (!inView || !isPriceRangeValid(priceRange)) return
 
     const run = async () => {
       while (!cancelled && inViewRef.current && hasNextPageRef.current) {
@@ -51,7 +56,7 @@ export default function HomePage() {
 
     run()
     return () => { cancelled = true }
-  }, [inView, fetchNextPage])
+  }, [inView, fetchNextPage, priceRange])
 
   return (
     <Main>
@@ -66,11 +71,16 @@ export default function HomePage() {
               isFavorite={favoritesIds.includes(house.id)}
             />
           )
-        }) : <LoadingIcon />}
-        <Sentinel ref={ref}></Sentinel>
-        <LoadingBar isVisible={isFetchingNextPage}>
-          <LoadingIcon text='Searching for your ideal home'/>
-        </LoadingBar>
+        }) : <LoadingIcon text='Searching for your ideal home' />}
+        {!isPriceRangeValid(priceRange) &&
+          <ErrorMessage>Please check your filters and try again.</ErrorMessage>
+        }
+        {isFetchingNextPage && (
+          <LoadingBar>
+            <LoadingIcon text='Searching for your ideal home' />
+          </LoadingBar>
+        )}
+        <Sentinel ref={ref} />
       </Container>
     </Main>
   )
@@ -100,9 +110,8 @@ const Container = styled.div`
   position: relative;
 `
 
-const LoadingBar = styled.div<{ isVisible: boolean }>`
+const LoadingBar = styled.div`
   width: 100%;
-  opacity: ${props => (props.isVisible ? 1 : 0)};
   transition: opacity 0.2s ease-in-out;
   height: 6rem;
   background-color: #ccc;
@@ -116,6 +125,16 @@ const LoadingBar = styled.div<{ isVisible: boolean }>`
   pointer-events: none;
   backdrop-filter: blur(12px);
   mask-image: linear-gradient(to top, black 0%, black 20%, transparent 100%);
+`
+
+const ErrorMessage = styled.p`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: ${theme.colors.textGrey};
+  font-size: 0.95rem;
 `
 
 const Sentinel = styled.div`

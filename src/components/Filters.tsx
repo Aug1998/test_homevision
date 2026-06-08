@@ -5,6 +5,9 @@ import theme from '../theme'
 import { IoCloseOutline } from "react-icons/io5";
 import { useAppDispatch, useAppSelector } from '../store'
 import { selectState, setMaxPrice, setMinPrice, setStatesDropdownIsOpen, setStatesSearchInput, unselectState } from '../store/slices/Filters/filters.slice'
+import { isPriceRangeValid } from '../store/slices/Filters/filters.util';
+import { BiSolidError } from "react-icons/bi";
+import { HiMiniCurrencyDollar } from "react-icons/hi2";
 
 export default function Filters() {
   const wrapperRef = useRef<HTMLDivElement | null>(null)
@@ -13,100 +16,122 @@ export default function Filters() {
 
   const formatCurrency = (value: number): string => {
     if (!value) return ''
-    return `$ ${Math.round(value).toLocaleString('en-US')}`
+    return `${Math.round(value).toLocaleString('en-US')}`
   }
 
   const handlePriceInput = (value: string): number => {
-    return parseFloat(value.replace(/[^0-9.]/g, ''))
+    if (value === '') {
+      return 0
+    }
+    return parseFloat(value.replace(/[^0-9]/g, ''))
   }
 
   return (
     <Container>
       <h3>Filters</h3>
-      <h4>Price Range</h4>
-      <PriceRangeContainer>
-        <div>
-          <label htmlFor='min-price'>Min price</label>
-          <input
-            id='min-price'
-            type='text'
-            value={formatCurrency(priceRange.min)}
-            onChange={(e) => dispatch(setMinPrice(handlePriceInput(e.target.value)))}
-            placeholder='$ 0'
-            maxLength={9}
-          />
-        </div>
-        <div>
-          <label htmlFor='max-price'>Max price</label>
-          <input
-            id='max-price'
-            type='text'
-            value={formatCurrency(priceRange.max)}
-            onChange={(e) => dispatch(setMaxPrice(handlePriceInput(e.target.value)))}
-            placeholder='$ 0'
-            maxLength={9}
-          />
-        </div>
-      </PriceRangeContainer>
+      <form>
+        <Field>
+          <h4>Price Range</h4>
+          <PriceRangeContainer>
+            <fieldset>
+              <label htmlFor='min-price'>Min price</label>
+              <HiMiniCurrencyDollar />
+              <input
+                id='min-price'
+                type='text'
+                value={formatCurrency(priceRange.min)}
+                onChange={(e) => dispatch(setMinPrice(handlePriceInput(e.target.value)))}
+                placeholder='0'
+                maxLength={7}
+                aria-invalid={!isPriceRangeValid(priceRange)}
+                data-invalid={!isPriceRangeValid(priceRange)}
+              />
+            </fieldset>
+            <fieldset>
+              <label htmlFor='max-price'>Max price</label>
+              <HiMiniCurrencyDollar />
+              <input
+                id='max-price'
+                type='text'
+                value={formatCurrency(priceRange.max)}
+                onChange={(e) => dispatch(setMaxPrice(handlePriceInput(e.target.value)))}
+                placeholder='0'
+                maxLength={7}
+                aria-invalid={!isPriceRangeValid(priceRange)}
+                data-invalid={!isPriceRangeValid(priceRange)}
+              />
+            </fieldset>
+          </PriceRangeContainer>
+          {!isPriceRangeValid(priceRange) && (
+            <ErrorMessage>
+              <BiSolidError />
+              The maximum price must be greater than the minimum.
+            </ErrorMessage>
+          )}
+        </Field>
+        <Field>
+          <fieldset>
+            <h4>Location</h4>
+            <SelectWrapper ref={wrapperRef}>
+              {selectedStates.length > 0 && (
+                <TagList>
+                  {selectedStates.map((selectedState) => (
+                    <Tag
+                      key={selectedState.value}
+                      onClick={() => dispatch(unselectState(selectedState.value))}
+                    >
+                      {selectedState.label}
+                      <IoCloseOutline />
+                    </Tag>
+                  ))}
+                </TagList>
+              )}
 
-      <Field>
-        <h4>Location</h4>
-        <SelectWrapper ref={wrapperRef}>
-          <TagList>
-            {selectedStates.map((selectedState) => (
-              <Tag
-                key={selectedState.value}
-                onClick={() => dispatch(unselectState(selectedState.value))}
-              >
-                {selectedState.label}
-                <IoCloseOutline />
-              </Tag>
-            ))}
-          </TagList>
+              <SearchInput
+                id='state-search'
+                value={searchInput}
+                onChange={(event) => {
+                  dispatch(setStatesSearchInput(event.target.value))
+                  dispatch(setStatesDropdownIsOpen(true))
+                }}
+                onFocus={() => dispatch(setStatesDropdownIsOpen(true))}
+                onBlur={() => {
+                  // Delay closing to allow click events to register
+                  setTimeout(() => {
+                    if (!wrapperRef.current?.contains(document.activeElement)) {
+                      dispatch(setStatesDropdownIsOpen(false))
+                    }
+                  }, 10)
+                }}
+                placeholder='Search states'
+                aria-expanded={dropdownIsOpen}
+                aria-haspopup='listbox'
+              />
 
-          <SearchInput
-            id='state-search'
-            value={searchInput}
-            onChange={(event) => {
-              dispatch(setStatesSearchInput(event.target.value))
-              dispatch(setStatesDropdownIsOpen(true))
-            }}
-            onFocus={() => dispatch(setStatesDropdownIsOpen(true))}
-            onBlur={() => {
-              // Delay closing to allow click events to register
-              setTimeout(() => {
-                if (!wrapperRef.current?.contains(document.activeElement)) {
-                  dispatch(setStatesDropdownIsOpen(false))
-                }
-              }, 10)
-            }}
-            placeholder='Search states'
-            aria-expanded={dropdownIsOpen}
-            aria-haspopup='listbox'
-          />
-
-          <Dropdown role='listbox' hidden={!dropdownIsOpen}>
-            {dropdownOptions.length > 0 ? (
-              dropdownOptions.map((state) => (
-                <Option
-                  key={state.value}
-                  type='button'
-                  onClick={() => {
-                    dispatch(selectState(state))
-                    dispatch(setStatesSearchInput(''))
-                    dispatch(setStatesDropdownIsOpen(false))
-                  }}
-                >
-                  <p>{state.label}</p>
-                  <code>{state.value}</code>
-                </Option>
-              ))
-            ) : (
-              <EmptyMessage>No matching states</EmptyMessage>
-            )}
-          </Dropdown>
-        </SelectWrapper>
-      </Field>
+              <Dropdown role='listbox' hidden={!dropdownIsOpen}>
+                {dropdownOptions.length > 0 ? (
+                  dropdownOptions.map((state) => (
+                    <Option
+                      key={state.value}
+                      type='button'
+                      onClick={() => {
+                        dispatch(selectState(state))
+                        dispatch(setStatesSearchInput(''))
+                        dispatch(setStatesDropdownIsOpen(false))
+                      }}
+                    >
+                      <p>{state.label}</p>
+                      <code>{state.value}</code>
+                    </Option>
+                  ))
+                ) : (
+                  <EmptyMessage>No matching states</EmptyMessage>
+                )}
+              </Dropdown>
+            </SelectWrapper>
+          </fieldset>
+        </Field>
+      </form>
     </Container>
   )
 }
@@ -119,6 +144,10 @@ const Container = styled(Box)`
   width: 100%;
   height: fit-content;
 
+  fieldset {
+    all: unset
+  }
+
   h3 {
     font-size: 1rem;
     font-weight: 600;
@@ -130,6 +159,7 @@ const Container = styled(Box)`
     font-size: 0.875rem;
     font-weight: 500;
     color: ${theme.colors.textGrey};
+    margin-bottom: 0.3rem;
   }
 `
 
@@ -138,10 +168,19 @@ const PriceRangeContainer = styled.div`
   grid-template-columns: 1fr 1fr;
   gap: 0.5rem;
 
-  div {
+  fieldset {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
+    position: relative;
+    
+    svg {
+      position: absolute;
+      bottom: 0.5rem;
+      left: 0.6rem;
+      font-size: 1.2rem;
+      color: ${theme.colors.textGrey};
+    }
     
     label {
       font-size: 0.875rem;
@@ -151,6 +190,7 @@ const PriceRangeContainer = styled.div`
     
     input {
       padding: 0.5rem;
+      padding-left: 1.95rem;
       border-radius: 0.25rem;
       border: 1px solid ${theme.colors.grey};
       font-size: 0.875rem;
@@ -167,9 +207,19 @@ const PriceRangeContainer = styled.div`
         margin: 0;
       }
 
+      
       &:focus {
         outline: none;
         border-color: ${theme.colors.primary};
+      }
+      
+      &[data-invalid='true'] {
+        border-color: ${theme.colors.red};
+      }
+    }
+    &:focus-within {
+      svg {
+        color: ${theme.colors.textGrey};
       }
     }
   }
@@ -178,13 +228,15 @@ const PriceRangeContainer = styled.div`
 const Field = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  margin-top: 1.25rem;
 
   label {
     font-size: 0.875rem;
     font-weight: 500;
     color: ${theme.colors.primaryDark};
+  }
+  
+  &:not(:first-of-type) {
+    margin-top: 1.25rem;
   }
 `
 
@@ -193,11 +245,23 @@ const SelectWrapper = styled.div`
   width: 100%;
 `
 
+const ErrorMessage = styled.p`
+  font-size: 0.85rem;
+  color: ${theme.colors.red};
+  line-height: 1.1rem;
+  margin-top: 0.25rem;
+  svg {
+    transform: translateY(2px);
+    font-size: 0%.9;
+    margin-right: 3px;
+  }
+`
+
 const TagList = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-bottom: 0.5rem;
+  margin: 0.3rem 0 0.5rem;
 `
 
 const Tag = styled.div`

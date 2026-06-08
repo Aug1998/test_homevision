@@ -19,12 +19,10 @@ export const favoritesSlice = createSlice({
   name: 'filters',
   initialState,
   reducers: {
-    setMinPrice: (state, action: PayloadAction<number | undefined>) => {
-      if (action.payload === undefined) return
+    setMinPrice: (state, action: PayloadAction<number>) => {
       state.priceRange.min = action.payload
     },
-    setMaxPrice: (state, action: PayloadAction<number | undefined>) => {
-      if (action.payload === undefined) return
+    setMaxPrice: (state, action: PayloadAction<number>) => {
       state.priceRange.max = action.payload
     },
     setStatesDropdownIsOpen: (state, action: PayloadAction<boolean>) => {

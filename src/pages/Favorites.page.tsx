@@ -34,7 +34,7 @@ export default function FavoritesPage() {
               />
             )
           })}
-        </Container> : <LoadingIcon />
+        </Container> : <LoadingIcon text='Loading your ideal homes' />
       }
     </>
   )
