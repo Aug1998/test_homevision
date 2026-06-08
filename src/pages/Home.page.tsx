@@ -69,7 +69,7 @@ export default function HomePage() {
         }) : <LoadingIcon />}
         <Sentinel ref={ref}></Sentinel>
         <LoadingBar isVisible={isFetchingNextPage}>
-          <LoadingIcon text='Searching your ideal home'/>
+          <LoadingIcon text='Searching for your ideal home'/>
         </LoadingBar>
       </Container>
     </Main>
