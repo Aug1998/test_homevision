@@ -1,8 +1,9 @@
+import type { UseQueryOptions } from "@tanstack/react-query";
 import type { House } from "../api";
-import { fetchHouses } from "../api/client";
+import { fetchFixedAmountOfHouses, fetchHouses } from "../api/client";
 
 export const housesQueries = {
-  infinite: (itemsPerPage: number = 10) => ({
+  infinite: (itemsPerPage: number) => ({
     queryKey: ["houses", { itemsPerPage }] as const,
     queryFn: fetchHouses,
     initialPageParam: 1,
@@ -11,8 +12,14 @@ export const housesQueries = {
       return allPages.length + 1
     },
   }),
-  amount: (itemsPerPage: number) => ({
-    queryKey: ["houses", { itemsPerPage }] as const,
-    queryFn: fetchHouses,
-  }),
+  amount: (
+    itemsPerPage: number,
+    options?: UseQueryOptions<House[], Error, House[], readonly ["houses", { itemsPerPage: number }]>
+  ) => {
+    return {
+      ...options,
+      queryKey: ["houses", { itemsPerPage }] as const,
+      queryFn: () => fetchFixedAmountOfHouses(itemsPerPage),
+    } as UseQueryOptions<House[], Error, House[], readonly ["houses", { itemsPerPage: number }]>
+  }
 };

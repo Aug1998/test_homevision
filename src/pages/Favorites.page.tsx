@@ -10,7 +10,7 @@ import LoadingIcon from '../components/LoadingIcon'
 export default function FavoritesPage() {
   const { favoritesIds } = useAppSelector((state) => state.favorites);
   const maxFavoriteId = Math.max(...favoritesIds) + 1;
-  const { data, isLoading } = useQuery<House[]>(housesQueries.amount(maxFavoriteId))
+  const { data, isLoading } = useQuery(housesQueries.amount(maxFavoriteId))
 
   const favoriteHouses = useMemo(
     () => {
