@@ -66,3 +66,13 @@ export const Box = styled.div`
   border-radius: 1rem;
   padding: 1.2rem;
 `
+
+export const ErrorMessage = styled.p`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: ${theme.colors.textGrey};
+  font-size: 0.95rem;
+`

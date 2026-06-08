@@ -10,6 +10,7 @@ import LoadingIcon from '../components/LoadingIcon'
 import theme from '../theme'
 import type { House } from '../api'
 import { addressIsInSelectedStates, priceIsInRange, isPriceRangeValid } from '../store/slices/Filters/filters.util'
+import { ErrorMessage } from '../styles'
 
 export default function HomePage() {
   const { favoritesIds } = useAppSelector((state) => state.favorites);
@@ -125,16 +126,6 @@ const LoadingBar = styled.div`
   pointer-events: none;
   backdrop-filter: blur(12px);
   mask-image: linear-gradient(to top, black 0%, black 20%, transparent 100%);
-`
-
-const ErrorMessage = styled.p`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: ${theme.colors.textGrey};
-  font-size: 0.95rem;
 `
 
 const Sentinel = styled.div`

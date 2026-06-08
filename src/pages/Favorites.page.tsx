@@ -6,6 +6,7 @@ import { useAppSelector } from '../store'
 import type { House } from '../api'
 import Card from '../components/Card'
 import LoadingIcon from '../components/LoadingIcon'
+import { ErrorMessage } from '../styles'
 
 export default function FavoritesPage() {
   const { favoritesIds } = useAppSelector((state) => state.favorites);
@@ -15,26 +16,27 @@ export default function FavoritesPage() {
   const favoriteHouses = useMemo(
     () => {
       const favoritesIdsSet = new Set(favoritesIds);
-      return data?.filter((house: House) => favoritesIdsSet.has(house.id)) || []
+      return (data as House[])?.filter((house: House) => favoritesIdsSet.has(house.id)) || []
     },
     [data, favoritesIds]
   );
 
   return (
     <>
-      {!isLoading ?
-        <Container>
-          {favoriteHouses?.map((house: House) => {
-            return (
-              <Card
-                id={`house-card-${house.id}`}
-                key={`house-card-${house.id}`}
-                house={house}
-                isFavorite={favoritesIds.includes(house.id)}
-              />
-            )
-          })}
-        </Container> : <LoadingIcon text='Loading your ideal homes' />
+      {favoritesIds.length === 0 ? <ErrorMessage>You don't have any favorites yet!</ErrorMessage> :
+        !isLoading ?
+          <Container>
+            {favoriteHouses?.map((house: House) => {
+              return (
+                <Card
+                  id={`house-card-${house.id}`}
+                  key={`house-card-${house.id}`}
+                  house={house}
+                  isFavorite={favoritesIds.includes(house.id)}
+                />
+              )
+            })}
+          </Container> : <LoadingIcon text='Loading your ideal homes' />
       }
     </>
   )
