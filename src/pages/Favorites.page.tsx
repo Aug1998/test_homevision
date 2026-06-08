@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { useAppSelector } from '../store'
 import type { House } from '../api'
-import Card from '../components/Card'
+import HouseCard from '../components/HouseCard'
 import LoadingIcon from '../components/LoadingIcon'
 import { ErrorMessage } from '../styles'
 
@@ -28,7 +28,7 @@ export default function FavoritesPage() {
           <Container>
             {favoriteHouses?.map((house: House) => {
               return (
-                <Card
+                <HouseCard
                   id={`house-card-${house.id}`}
                   key={`house-card-${house.id}`}
                   house={house}

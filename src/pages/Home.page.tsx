@@ -5,7 +5,7 @@ import { housesQueries } from '../queries/house.queries'
 import { useInView } from 'react-intersection-observer'
 import { useAppSelector } from '../store'
 import { useEffect, useMemo, useRef } from 'react'
-import Card from '../components/Card'
+import HouseCard from '../components/HouseCard'
 import LoadingIcon from '../components/LoadingIcon'
 import theme from '../theme'
 import type { House } from '../api'
@@ -53,7 +53,7 @@ export default function HomePage() {
       <Container>
         {!isLoading ? filteredHouses?.map((house) => {
           return (
-            <Card
+            <HouseCard
               id={`house-card-${house.id}`}
               key={`house-card-${house.id}`}
               house={house}

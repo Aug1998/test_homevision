@@ -13,7 +13,7 @@ type Props = React.HTMLAttributes<HTMLDivElement> & {
   isFavorite?: boolean
 }
 
-export default function Card({ house, isFavorite }: Props) {
+export default function HouseCard({ house, isFavorite }: Props) {
   const dispatch = useAppDispatch();
 
   return (
